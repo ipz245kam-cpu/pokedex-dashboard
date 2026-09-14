@@ -1,0 +1,218 @@
+/* src/App.css */
+
+.app {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 32px 24px 64px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  color: #1f2937;
+  text-align: left;
+}
+
+.app__header {
+  margin-bottom: 32px;
+}
+
+.app__header h1 {
+  font-size: 28px;
+  margin: 0 0 4px;
+}
+
+.app__header p {
+  margin: 0;
+  color: #6b7280;
+  font-size: 14px;
+}
+
+/* --- KPI Cards --- */
+.app__kpis {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.kpi-card {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 18px 20px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+
+.kpi-card__title {
+  margin: 0 0 8px;
+  font-size: 13px;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.kpi-card__value {
+  margin: 0;
+  font-size: 26px;
+  font-weight: 700;
+}
+
+.kpi-card__change {
+  margin: 6px 0 0;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.kpi-card__change--up {
+  color: #16a34a;
+}
+
+.kpi-card__change--down {
+  color: #dc2626;
+}
+
+/* --- Counter + Toggle row --- */
+.app__widgets {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.counter,
+.toggle {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 18px 20px;
+}
+
+.counter__label {
+  margin: 0 0 8px;
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.counter__value {
+  margin: 0 0 12px;
+  font-size: 28px;
+  font-weight: 700;
+}
+
+.counter__buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.counter__buttons button {
+  flex: 1;
+  padding: 8px 0;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  background: #f9fafb;
+  cursor: pointer;
+  font-size: 15px;
+}
+
+.counter__buttons button:hover {
+  background: #f3f4f6;
+}
+
+.toggle__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+.toggle__switch {
+  width: 44px;
+  height: 24px;
+  border-radius: 999px;
+  border: none;
+  background: #d1d5db;
+  position: relative;
+  cursor: pointer;
+  padding: 0;
+}
+
+.toggle__switch--on {
+  background: #7c3aed;
+}
+
+.toggle__knob {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #fff;
+  transition: transform 0.15s ease;
+}
+
+.toggle__switch--on .toggle__knob {
+  transform: translateX(20px);
+}
+
+.toggle__info {
+  margin: 0;
+  font-size: 13px;
+  color: #6b7280;
+}
+
+/* --- Filtered list --- */
+.app__list {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 18px 20px;
+}
+
+.filtered-list__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.filtered-list__title {
+  margin: 0;
+  font-weight: 600;
+}
+
+.filtered-list__header select {
+  padding: 6px 10px;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+}
+
+.filtered-list__items {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.filtered-list__item {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.filtered-list__item:last-child {
+  border-bottom: none;
+}
+
+.filtered-list__name {
+  font-weight: 500;
+}
+
+.filtered-list__types {
+  color: #6b7280;
+  font-size: 13px;
+}
+
+.filtered-list__empty {
+  color: #6b7280;
+  font-size: 14px;
+  padding: 12px 0;
+}
