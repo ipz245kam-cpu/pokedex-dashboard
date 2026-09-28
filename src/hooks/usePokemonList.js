@@ -1,27 +1,26 @@
-import { useState, useEffect, useCallback } from "react";
-import { fetchPokemonList } from "../api/pokeapi";
+import { useMemo } from 'react';
+import { useFetch } from './useFetch';
+import { fetchPokemonList } from '../api/pokeapi';
 
-export function usePokemonList(limit = 151) {
-  const [data, setData] = useState([]);
-  const [status, setStatus] = useState("loading"); // 'loading' | 'success' | 'error'
-  const [error, setError] = useState(null);
-
-  const loadData = useCallback(async () => {
-    setStatus("loading");
-    setError(null);
-    try {
+/**
+ * Хук завантаження списку покемонів.
+ * Обгортка над загальним useFetch: формує запит з урахуванням ліміту та пошуку.
+ *
+ * @param {Object} params
+ * @param {number} params.limit - скільки покемонів завантажити
+ * @param {string} params.search - рядок пошуку за іменем (debounced)
+ * @returns {{ data, loading, error, reload }}
+ */
+export function usePokemonList({ limit = 151, search = '' } = {}) {
+  const fetchFn = useMemo(() => {
+    return async () => {
       const result = await fetchPokemonList(limit);
-      setData(result);
-      setStatus("success");
-    } catch (err) {
-      setError(err.message || "Сталася помилка при завантаженні");
-      setStatus("error");
-    }
-  }, [limit]);
+      if (!search) return result;
+      return result.filter((p) =>
+        p.name.toLowerCase().includes(search.toLowerCase())
+      );
+    };
+  }, [limit, search]);
 
-  useEffect(() => {
-    loadData();
-  }, [loadData]);
-
-  return { data, status, error, reload: loadData };
+  return useFetch(fetchFn, [limit, search]);
 }
