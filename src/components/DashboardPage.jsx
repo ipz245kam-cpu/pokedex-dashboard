@@ -10,21 +10,20 @@ import { KpiSection } from "./KpiSection";
 export function DashboardPage() {
   // --- контрольовані поля форми фільтрів ---
   const [search, setSearch] = useState("");
+  const [typeFilter, setTypeFilter] = useState("all");
   const [sortField, setSortField] = useState("name");
   const [sortDir, setSortDir] = useState("asc");
-  const [typeFilter, setTypeFilter] = useState("all");
 
-  // debounce тільки для пошуку (щоб не смикати запит на кожну літеру)
+  // debounce тільки для пошуку (щоб не фільтрувати на кожну літеру)
   const debouncedSearch = useDebounce(search, 400);
 
-  const { data, loading, error, reload } = usePokemonList({
-    limit: 151,
-    search: debouncedSearch,
-  });
+  // список завантажується один раз; фільтрація - на клієнті
+  const { data, loading, error, reload } = usePokemonList({ limit: 151 });
 
-  // похідний статус для сумісності зі StatusView
-  const status = loading ? "loading" : error ? "error" : "success";
+  // статус для StatusView: "loading" лише поки даних ще немає зовсім
+  const status = error ? "error" : loading && !data ? "loading" : "success";
 
+  // типи беремо з повного списку, тому вони не залежать від пошуку
   const allTypes = useMemo(() => {
     if (!data) return [];
     const set = new Set();
@@ -32,14 +31,21 @@ export function DashboardPage() {
     return Array.from(set).sort();
   }, [data]);
 
-  const sortedData = useMemo(() => {
+  // 1) фільтрація за пошуком і типом
+  const filteredData = useMemo(() => {
     if (!data) return [];
-    const filtered =
-      typeFilter === "all"
-        ? data
-        : data.filter((p) => p.types.includes(typeFilter));
+    const query = debouncedSearch.trim().toLowerCase();
 
-    const copy = [...filtered]; // не мутуємо оригінальний масив
+    return data.filter((p) => {
+      const matchesSearch = !query || p.name.toLowerCase().includes(query);
+      const matchesType = typeFilter === "all" || p.types.includes(typeFilter);
+      return matchesSearch && matchesType;
+    });
+  }, [data, debouncedSearch, typeFilter]);
+
+  // 2) сортування (derived state, без мутації оригінального масиву)
+  const sortedData = useMemo(() => {
+    const copy = [...filteredData];
     copy.sort((a, b) => {
       const valA = a[sortField];
       const valB = b[sortField];
@@ -49,7 +55,7 @@ export function DashboardPage() {
       return valA - valB;
     });
     return sortDir === "asc" ? copy : copy.reverse();
-  }, [data, sortField, sortDir, typeFilter]);
+  }, [filteredData, sortField, sortDir]);
 
   const handleDirToggle = () => {
     setSortDir((prev) => (prev === "asc" ? "desc" : "asc"));
@@ -58,16 +64,19 @@ export function DashboardPage() {
   // скидання всіх фільтрів до початкового стану
   const handleResetFilters = () => {
     setSearch("");
+    setTypeFilter("all");
     setSortField("name");
     setSortDir("asc");
-    setTypeFilter("all");
   };
 
   return (
     <div className="dashboard-page">
       <h1>Покедекс — дашборд</h1>
 
-      <div className="filter-panel">
+      <form
+        className="filter-panel"
+        onSubmit={(e) => e.preventDefault()}
+      >
         <input
           type="text"
           placeholder="Пошук за іменем (англ.)..."
@@ -91,15 +100,15 @@ export function DashboardPage() {
         <button type="button" onClick={handleResetFilters}>
           Скинути фільтри
         </button>
-      </div>
+      </form>
 
       {status !== "success" && (
         <StatusView status={status} error={error} onRetry={reload} />
       )}
 
-      {status === "success" && (
+      {data && (
         <>
-          <KpiSection pokemons={data} />
+          <KpiSection pokemons={filteredData} />
           <PokemonTable pokemons={sortedData} />
         </>
       )}

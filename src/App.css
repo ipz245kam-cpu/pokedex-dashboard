@@ -282,3 +282,21 @@
 .status-error {
   color: #c0392b;
 }
+
+.filter-panel {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.filter-panel input[type="text"] {
+  padding: 6px 10px;
+  min-width: 220px;
+}
+
+.filter-panel .sort-controls,
+.filter-panel .type-filter {
+  margin-bottom: 0;
+}
