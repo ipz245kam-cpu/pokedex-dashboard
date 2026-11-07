@@ -1,4 +1,8 @@
+import { Link, useNavigate } from "react-router";
+
 export function PokemonTable({ pokemons }) {
+  const navigate = useNavigate();
+
   if (pokemons.length === 0) {
     return <p className="status status-empty">Дані відсутні</p>;
   }
@@ -17,11 +21,22 @@ export function PokemonTable({ pokemons }) {
       </thead>
       <tbody>
         {pokemons.map((p) => (
-          <tr key={p.id}>
+          <tr
+            key={p.id}
+            className="pokemon-row"
+            onClick={() => navigate(`/pokemon/${p.id}`)}
+          >
             <td>
               {p.sprite && <img src={p.sprite} alt={p.name} width={40} />}
             </td>
-            <td>{p.name}</td>
+            <td>
+              <Link
+                to={`/pokemon/${p.id}`}
+                onClick={(e) => e.stopPropagation()}
+              >
+                {p.name}
+              </Link>
+            </td>
             <td>{p.types.join(", ")}</td>
             <td>{p.hp}</td>
             <td>{p.attack}</td>

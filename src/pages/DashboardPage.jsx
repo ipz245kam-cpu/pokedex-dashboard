@@ -1,18 +1,17 @@
-import { useState, useMemo } from "react";
+import { useMemo } from "react";
 import { usePokemonList } from "../hooks/usePokemonList";
 import { useDebounce } from "../hooks/useDebounce";
-import { StatusView } from "./StatusView";
-import { PokemonTable } from "./PokemonTable";
-import { SortControls } from "./SortControls";
-import { TypeFilter } from "./TypeFilter";
-import { KpiSection } from "./KpiSection";
+import { useFilters } from "../hooks/useFilters";
+import { StatusView } from "../components/StatusView";
+import { PokemonTable } from "../components/PokemonTable";
+import { SortControls } from "../components/SortControls";
+import { TypeFilter } from "../components/TypeFilter";
+import { KpiSection } from "../components/KpiSection";
 
 export function DashboardPage() {
-  // --- контрольовані поля форми фільтрів ---
-  const [search, setSearch] = useState("");
-  const [typeFilter, setTypeFilter] = useState("all");
-  const [sortField, setSortField] = useState("name");
-  const [sortDir, setSortDir] = useState("asc");
+  // активні фільтри беремо з Context
+  const { search, setSearch, typeFilter, sortField, sortDir, resetFilters } =
+    useFilters();
 
   // debounce тільки для пошуку (щоб не фільтрувати на кожну літеру)
   const debouncedSearch = useDebounce(search, 400);
@@ -57,26 +56,11 @@ export function DashboardPage() {
     return sortDir === "asc" ? copy : copy.reverse();
   }, [filteredData, sortField, sortDir]);
 
-  const handleDirToggle = () => {
-    setSortDir((prev) => (prev === "asc" ? "desc" : "asc"));
-  };
-
-  // скидання всіх фільтрів до початкового стану
-  const handleResetFilters = () => {
-    setSearch("");
-    setTypeFilter("all");
-    setSortField("name");
-    setSortDir("asc");
-  };
-
   return (
     <div className="dashboard-page">
       <h1>Покедекс — дашборд</h1>
 
-      <form
-        className="filter-panel"
-        onSubmit={(e) => e.preventDefault()}
-      >
+      <form className="filter-panel" onSubmit={(e) => e.preventDefault()}>
         <input
           type="text"
           placeholder="Пошук за іменем (англ.)..."
@@ -84,20 +68,11 @@ export function DashboardPage() {
           onChange={(e) => setSearch(e.target.value)}
         />
 
-        <TypeFilter
-          types={allTypes}
-          value={typeFilter}
-          onChange={setTypeFilter}
-        />
+        <TypeFilter types={allTypes} />
 
-        <SortControls
-          sortField={sortField}
-          sortDir={sortDir}
-          onFieldChange={setSortField}
-          onDirToggle={handleDirToggle}
-        />
+        <SortControls />
 
-        <button type="button" onClick={handleResetFilters}>
+        <button type="button" onClick={resetFilters}>
           Скинути фільтри
         </button>
       </form>

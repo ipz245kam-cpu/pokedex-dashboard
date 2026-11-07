@@ -300,3 +300,98 @@
 .filter-panel .type-filter {
   margin-bottom: 0;
 }
+
+.layout__header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 24px;
+  border-bottom: 1px solid var(--border);
+}
+
+.layout__brand {
+  font-weight: 600;
+  font-size: 20px;
+  color: var(--text-h);
+  text-decoration: none;
+}
+
+.layout__content {
+  flex: 1;
+}
+
+.not-found-page {
+  padding: 40px 24px;
+}
+
+.pokemon-row {
+  cursor: pointer;
+}
+
+.pokemon-row:hover {
+  background: var(--accent-bg);
+}
+
+.details-page {
+  padding: 24px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.back-link {
+  display: inline-block;
+  margin-bottom: 16px;
+}
+
+.details__image {
+  width: 200px;
+  height: 200px;
+  object-fit: contain;
+}
+
+.details__name {
+  text-transform: capitalize;
+  margin: 8px 0;
+}
+
+.details__info {
+  list-style: none;
+  padding: 0;
+  margin: 12px 0 24px;
+}
+
+.details__stats {
+  max-width: 320px;
+  margin: 0 auto;
+}
+
+.details__name {
+  line-height: 1.2;
+  margin: 8px 0 16px;
+}
+
+.theme-toggle {
+  margin-left: auto;
+  cursor: pointer;
+}
+
+:root[data-theme="dark"] .kpi-card {
+  background: #1f2028;
+}
+
+:root[data-theme="dark"] .kpi-label {
+  color: #9ca3af;
+}
+
+:root[data-theme="dark"] .pokemon-table th,
+:root[data-theme="dark"] .pokemon-table td {
+  border-bottom-color: #2e303a;
+}
+
+:root[data-theme="dark"] .pokemon-table tr:nth-child(even) {
+  background: #1b1c23;
+}
+
+:root[data-theme="dark"] .status-error {
+  color: #f87171;
+}

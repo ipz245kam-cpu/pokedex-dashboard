@@ -5,6 +5,7 @@
 ## Стек
 
 - React + Vite
+- React Router v7
 - PokeAPI (REST)
 - ESLint
 
@@ -17,23 +18,46 @@ npm run dev
 
 Після запуску відкрий адресу з консолі (зазвичай `http://localhost:5173`).
 
+## Маршрути
+
+| Шлях | Сторінка |
+|------|----------|
+| `/` | Дашборд: фільтри, KPI, таблиця покемонів |
+| `/pokemon/:id` | Деталі покемона (id береться з параметра маршруту) |
+| `*` | Сторінка 404 |
+
+Для неіснуючого `id` на сторінці деталей показується повідомлення «не знайдено».
+
 ## Структура проєкту
 
 ```
 src/
 ├── api/
-│   └── pokeapi.js          # запити до PokeAPI
+│   └── pokeapi.js              # запити до PokeAPI
 ├── components/
-│   ├── DashboardPage.jsx   # контейнерний компонент сторінки
-│   ├── KpiSection.jsx      # KPI-картки
-│   ├── PokemonTable.jsx    # таблиця покемонів
-│   ├── SortControls.jsx    # вибір поля та напрямку сортування
-│   ├── StatusView.jsx      # стани loading / error
-│   └── TypeFilter.jsx      # фільтр за типом
+│   ├── Layout.jsx              # спільна шапка + Outlet
+│   ├── KpiSection.jsx          # KPI-картки
+│   ├── PokemonTable.jsx        # таблиця (рядок веде на деталі)
+│   ├── SortControls.jsx        # сортування (читає фільтри з Context)
+│   ├── StatusView.jsx          # стани loading / error
+│   ├── ThemeToggle.jsx         # перемикач теми
+│   └── TypeFilter.jsx          # фільтр за типом (читає фільтри з Context)
+├── context/
+│   ├── ThemeContext.js
+│   ├── ThemeProvider.jsx       # світла / темна тема
+│   ├── FiltersContext.js
+│   └── FiltersProvider.jsx     # пошук, тип, сортування
 ├── hooks/
-│   ├── useDebounce.js      # debounce значення
-│   ├── useFetch.js         # загальний хук завантаження даних
-│   └── usePokemonList.js   # завантаження списку покемонів
+│   ├── useDebounce.js
+│   ├── useFetch.js
+│   ├── useFilters.js
+│   ├── usePokemonDetails.js
+│   ├── usePokemonList.js
+│   └── useTheme.js
+├── pages/
+│   ├── DashboardPage.jsx
+│   ├── PokemonDetailsPage.jsx
+│   └── NotFoundPage.jsx
 ├── App.jsx
 ├── App.css
 ├── index.css
@@ -49,6 +73,7 @@ src/
 | ЛР1 | `lab1` | Прості віджети на mock-даних: KPI Card, Counter, Toggle, Filtered List |
 | ЛР2 | `lab2` | Реальні дані з PokeAPI, стани loading / error / empty, таблиця, сортування, живі KPI, фільтр за типом |
 | ЛР3 | `lab3` | Форма фільтрів (пошук, тип, сортування), хуки `useDebounce` та `useFetch`, кнопка скидання фільтрів |
+| ЛР4 | `lab4` | React Router, дрілдаун на сторінку деталей, `ThemeContext`, `FiltersContext`, обробка неіснуючого id |
 
 Переглянути стан конкретної лабораторної:
 
@@ -61,3 +86,5 @@ git checkout lab2
 ```bash
 git checkout main
 ```
+
+Робота над ЛР4 велась у гілці `lab4`.
