@@ -1,29 +1,27 @@
 import { useCallback, useMemo } from "react";
 import { useFetch } from "./useFetch";
 import { fetchPokemonList } from "../api/pokeapi";
+import { POKEMON_LIMIT, DEFAULT_FILTERS } from "../config/defaults";
 
 /**
  * Хук списку покемонів: завантаження + фільтрація + сортування.
  * Список завантажується один раз (повторно лише при зміні limit),
  * а пошук, фільтр за типом і сортування виконуються на клієнті.
  *
- * Значення фільтрів передаються параметрами, тому хук не залежить
- * від того, звідки вони беруться (Context, форма тощо).
- *
  * @param {Object} params
- * @param {number} [params.limit]       - скільки покемонів завантажити
- * @param {string} [params.search]      - рядок пошуку за іменем
- * @param {string} [params.typeFilter]  - тип або "all"
- * @param {string} [params.sortField]   - поле сортування
- * @param {string} [params.sortDir]     - "asc" | "desc"
+ * @param {number} [params.limit]
+ * @param {string} [params.search]
+ * @param {string} [params.typeFilter]
+ * @param {string} [params.sortField]
+ * @param {string} [params.sortDir]
  * @returns {{ pokemons, allTypes, hasData, loading, error, reload }}
  */
 export function usePokemonList({
-  limit = 151,
-  search = "",
-  typeFilter = "all",
-  sortField = "name",
-  sortDir = "asc",
+  limit = POKEMON_LIMIT,
+  search = DEFAULT_FILTERS.search,
+  typeFilter = DEFAULT_FILTERS.typeFilter,
+  sortField = DEFAULT_FILTERS.sortField,
+  sortDir = DEFAULT_FILTERS.sortDir,
 } = {}) {
   const fetchFn = useCallback(
     (signal) => fetchPokemonList(limit, signal),
@@ -47,7 +45,9 @@ export function usePokemonList({
 
     const filtered = data.filter((p) => {
       const matchesSearch = !query || p.name.toLowerCase().includes(query);
-      const matchesType = typeFilter === "all" || p.types.includes(typeFilter);
+      const matchesType =
+        typeFilter === DEFAULT_FILTERS.typeFilter ||
+        p.types.includes(typeFilter);
       return matchesSearch && matchesType;
     });
 

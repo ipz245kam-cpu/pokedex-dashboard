@@ -1,37 +1,48 @@
 import { useState, useMemo, useCallback } from "react";
 import { FiltersContext } from "./FiltersContext";
+import { DEFAULT_FILTERS } from "../config/defaults";
 
 export function FiltersProvider({ children }) {
-  const [search, setSearch] = useState("");
-  const [typeFilter, setTypeFilter] = useState("all");
-  const [sortField, setSortField] = useState("name");
-  const [sortDir, setSortDir] = useState("asc");
+  // ініціалізуємо стан з єдиного джерела правди
+  const [filters, setFilters] = useState(DEFAULT_FILTERS);
 
-  const toggleSortDir = useCallback(() => {
-    setSortDir((prev) => (prev === "asc" ? "desc" : "asc"));
-  }, []);
+  const setSearch = useCallback(
+    (search) => setFilters((prev) => ({ ...prev, search })),
+    []
+  );
 
-  // скидання всіх фільтрів до початкового стану
-  const resetFilters = useCallback(() => {
-    setSearch("");
-    setTypeFilter("all");
-    setSortField("name");
-    setSortDir("asc");
-  }, []);
+  const setTypeFilter = useCallback(
+    (typeFilter) => setFilters((prev) => ({ ...prev, typeFilter })),
+    []
+  );
+
+  const setSortField = useCallback(
+    (sortField) => setFilters((prev) => ({ ...prev, sortField })),
+    []
+  );
+
+  const toggleSortDir = useCallback(
+    () =>
+      setFilters((prev) => ({
+        ...prev,
+        sortDir: prev.sortDir === "asc" ? "desc" : "asc",
+      })),
+    []
+  );
+
+  // скидання повертає до DEFAULT_FILTERS, а не прописує значення вручну
+  const resetFilters = useCallback(() => setFilters(DEFAULT_FILTERS), []);
 
   const value = useMemo(
     () => ({
-      search,
+      ...filters,
       setSearch,
-      typeFilter,
       setTypeFilter,
-      sortField,
       setSortField,
-      sortDir,
       toggleSortDir,
       resetFilters,
     }),
-    [search, typeFilter, sortField, sortDir, toggleSortDir, resetFilters]
+    [filters, setSearch, setTypeFilter, setSortField, toggleSortDir, resetFilters]
   );
 
   return (

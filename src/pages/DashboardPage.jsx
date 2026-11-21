@@ -6,16 +6,14 @@ import { PokemonTable } from "../components/PokemonTable";
 import { SortControls } from "../components/SortControls";
 import { TypeFilter } from "../components/TypeFilter";
 import { KpiSection } from "../components/KpiSection";
+import { DEBOUNCE_DELAY } from "../config/defaults";
 
 export function DashboardPage() {
-  // активні фільтри беремо з Context
   const { search, setSearch, typeFilter, sortField, sortDir, resetFilters } =
     useFilters();
 
-  // debounce пошуку — щоб не фільтрувати на кожну літеру
-  const debouncedSearch = useDebounce(search, 400);
+  const debouncedSearch = useDebounce(search, DEBOUNCE_DELAY);
 
-  // уся логіка списку — у хуку
   const { pokemons, allTypes, hasData, loading, error, reload } =
     usePokemonList({
       search: debouncedSearch,
