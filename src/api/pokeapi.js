@@ -1,8 +1,8 @@
 const BASE_URL = "https://pokeapi.co/api/v2";
 
 // Дістає деталі одного покемона за URL зі списку
-async function fetchPokemonDetails(url) {
-  const res = await fetch(url);
+async function fetchPokemonDetails(url, signal) {
+  const res = await fetch(url, { signal });
   if (!res.ok) {
     throw new Error(`Не вдалося завантажити покемона: ${res.status}`);
   }
@@ -22,15 +22,17 @@ async function fetchPokemonDetails(url) {
 }
 
 // Основна функція: тягне список і деталі кожного покемона
-export async function fetchPokemonList(limit = 151) {
-  const listRes = await fetch(`${BASE_URL}/pokemon?limit=${limit}&offset=0`);
+export async function fetchPokemonList(limit = 151, signal) {
+  const listRes = await fetch(`${BASE_URL}/pokemon?limit=${limit}&offset=0`, {
+    signal,
+  });
   if (!listRes.ok) {
     throw new Error(`Не вдалося завантажити список: ${listRes.status}`);
   }
   const listData = await listRes.json();
 
   const details = await Promise.all(
-    listData.results.map((p) => fetchPokemonDetails(p.url))
+    listData.results.map((p) => fetchPokemonDetails(p.url, signal))
   );
 
   return details;
@@ -38,8 +40,10 @@ export async function fetchPokemonList(limit = 151) {
 
 // Розширена інформація про одного покемона (для сторінки деталей).
 // Якщо покемона з таким id не існує - повертає null.
-export async function fetchPokemonById(id) {
-  const res = await fetch(`${BASE_URL}/pokemon/${encodeURIComponent(id)}`);
+export async function fetchPokemonById(id, signal) {
+  const res = await fetch(`${BASE_URL}/pokemon/${encodeURIComponent(id)}`, {
+    signal,
+  });
 
   if (res.status === 404) {
     return null;

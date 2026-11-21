@@ -4,15 +4,18 @@ import { useState, useEffect, useCallback } from "react";
  * Загальний хук для завантаження даних.
  * Не прив'язаний до конкретного API — приймає функцію запиту.
  *
+ * fetchFn отримує AbortSignal першим аргументом: fetchFn(signal).
+ * Коли запит стає неактуальним (зміна fetchFn, reload, розмонтування),
+ * він скасовується через AbortController.
+ *
  * ВАЖЛИВО: fetchFn має бути стабільною (useMemo / useCallback),
  * інакше дані перезавантажуватимуться на кожному рендері.
  *
  * Стан змінюється лише після завершення запиту. loading обчислюється:
  * поки результат не належить поточному запиту, вважаємо, що йде завантаження.
- * Застарілі відповіді ігноруються (прапорець cancelled у cleanup).
  * Під час повторного завантаження попередні дані не стираються.
  *
- * @param {Function} fetchFn - асинхронна функція, що повертає дані
+ * @param {(signal: AbortSignal) => Promise<*>} fetchFn
  * @returns {{ data: *, loading: boolean, error: string|null, reload: Function }}
  */
 export function useFetch(fetchFn) {
@@ -27,15 +30,16 @@ export function useFetch(fetchFn) {
   });
 
   useEffect(() => {
-    let cancelled = false;
+    const controller = new AbortController();
 
-    fetchFn()
+    fetchFn(controller.signal)
       .then((data) => {
-        if (cancelled) return; // застаріла відповідь
+        if (controller.signal.aborted) return; // запит скасовано
         setResult({ data, error: null, fetchFn, reloadCount });
       })
       .catch((err) => {
-        if (cancelled) return;
+        // скасування - це не помилка
+        if (err.name === "AbortError" || controller.signal.aborted) return;
         setResult((prev) => ({
           data: prev.data,
           error: err.message || "Сталася помилка при завантаженні",
@@ -44,10 +48,8 @@ export function useFetch(fetchFn) {
         }));
       });
 
-    // при розмонтуванні або зміні запиту поточна відповідь стає неактуальною
-    return () => {
-      cancelled = true;
-    };
+    // при розмонтуванні або зміні запиту скасовуємо поточний запит
+    return () => controller.abort();
   }, [fetchFn, reloadCount]);
 
   const loading =
