@@ -1,4 +1,5 @@
 import { Link, useNavigate } from "react-router";
+import { FavoriteButton } from "./FavoriteButton";
 
 export function PokemonTable({ pokemons }) {
   const navigate = useNavigate();
@@ -17,6 +18,7 @@ export function PokemonTable({ pokemons }) {
           <th>HP</th>
           <th>Атака</th>
           <th>Захист</th>
+          <th></th>
         </tr>
       </thead>
       <tbody>
@@ -41,6 +43,9 @@ export function PokemonTable({ pokemons }) {
             <td>{p.hp}</td>
             <td>{p.attack}</td>
             <td>{p.defense}</td>
+            <td>
+              <FavoriteButton id={p.id} size="sm" />
+            </td>
           </tr>
         ))}
       </tbody>

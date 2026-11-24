@@ -8,6 +8,7 @@ import { PokemonTable } from "../components/PokemonTable";
 import { SortControls } from "../components/SortControls";
 import { TypeFilter } from "../components/TypeFilter";
 import { KpiSection } from "../components/KpiSection";
+import { PokemonChart } from "../components/PokemonChart";
 import { DEBOUNCE_DELAY, DEFAULT_FILTERS } from "../config/defaults";
 
 export function DashboardPage() {
@@ -25,12 +26,10 @@ export function DashboardPage() {
   // eslint-disable-next-line react-hooks/incompatible-library
   const { search, typeFilter, sortField } = watch();
 
-  // при першому рендері встановлюємо дефолтні значення у форму
   useEffect(() => {
     reset(DEFAULT_FILTERS);
   }, [reset]);
 
-  // скидаємо і форму, і Context одночасно
   const handleReset = () => {
     reset(DEFAULT_FILTERS);
     resetFilters();
@@ -91,6 +90,7 @@ export function DashboardPage() {
       {hasData && (
         <>
           <KpiSection pokemons={pokemons} />
+          <PokemonChart pokemons={pokemons} />
           <PokemonTable pokemons={pokemons} />
         </>
       )}

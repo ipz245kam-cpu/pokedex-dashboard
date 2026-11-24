@@ -1,19 +1,17 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { BrowserRouter } from 'react-router'
-import { ThemeProvider } from './context/ThemeProvider'
-import { FiltersProvider } from './context/FiltersProvider'
+import { Provider } from 'react-redux'
+import { store } from './store/index'
 import './index.css'
 import App from './App.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <ThemeProvider>
-      <FiltersProvider>
-        <BrowserRouter>
-          <App />
-        </BrowserRouter>
-      </FiltersProvider>
-    </ThemeProvider>
+    <Provider store={store}>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </Provider>
   </StrictMode>,
 )

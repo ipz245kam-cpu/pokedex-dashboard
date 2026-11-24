@@ -1,6 +1,7 @@
 import { Link, useParams } from "react-router";
 import { usePokemonDetails } from "../hooks/usePokemonDetails";
 import { StatusView } from "../components/StatusView";
+import { FavoriteButton } from "../components/FavoriteButton";
 
 const STAT_LABELS = {
   hp: "HP",
@@ -12,7 +13,6 @@ const STAT_LABELS = {
 };
 
 export function PokemonDetailsPage() {
-  // id береться з параметра маршруту /pokemon/:id
   const { id } = useParams();
   const { data, loading, error, reload } = usePokemonDetails(id);
 
@@ -35,9 +35,12 @@ export function PokemonDetailsPage() {
           <img className="details__image" src={data.image} alt={data.name} />
         )}
 
-        <h1 className="details__name">
-          #{data.id} {data.name}
-        </h1>
+        <div className="details__title-row">
+          <h1 className="details__name">
+            #{data.id} {data.name}
+          </h1>
+          <FavoriteButton id={data.id} size="lg" />
+        </div>
 
         <p className="details__types">Типи: {data.types.join(", ")}</p>
 

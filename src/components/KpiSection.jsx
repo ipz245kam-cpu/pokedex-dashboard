@@ -1,27 +1,35 @@
+import { useSelector } from "react-redux";
+import { selectFavoritesCount } from "../store/favoritesSlice";
+
+function KpiCard({ title, value }) {
+  return (
+    <div className="kpi-card">
+      <p className="kpi-value">{value}</p>
+      <p className="kpi-label">{title}</p>
+    </div>
+  );
+}
+
 export function KpiSection({ pokemons }) {
-  const total = pokemons.length;
+  const favoritesCount = useSelector(selectFavoritesCount);
 
-  const byType = pokemons.reduce((acc, p) => {
-    p.types.forEach((type) => {
-      acc[type] = (acc[type] || 0) + 1;
+  // рахуємо кількість покемонів кожного типу
+  const typeCounts = {};
+  pokemons.forEach((p) => {
+    p.types.forEach((t) => {
+      typeCounts[t] = (typeCounts[t] ?? 0) + 1;
     });
-    return acc;
-  }, {});
-
-  const typeEntries = Object.entries(byType).sort((a, b) => b[1] - a[1]);
+  });
 
   return (
     <div className="kpi-section">
-      <div className="kpi-card">
-        <span className="kpi-value">{total}</span>
-        <span className="kpi-label">Усього покемонів</span>
-      </div>
-      {typeEntries.map(([type, count]) => (
-        <div className="kpi-card" key={type}>
-          <span className="kpi-value">{count}</span>
-          <span className="kpi-label">Тип: {type}</span>
-        </div>
-      ))}
+      <KpiCard title="Усього покемонів" value={pokemons.length} />
+      <KpiCard title="Обраних ★" value={favoritesCount} />
+      {Object.entries(typeCounts)
+        .sort((a, b) => b[1] - a[1])
+        .map(([type, count]) => (
+          <KpiCard key={type} title={`Тип: ${type}`} value={count} />
+        ))}
     </div>
   );
 }

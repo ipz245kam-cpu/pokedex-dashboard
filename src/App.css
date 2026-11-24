@@ -406,3 +406,89 @@
   font-size: 12px;
   color: #ef4444;
 }
+
+/* Графік */
+.pokemon-chart {
+  margin: 24px 0;
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+
+.pokemon-chart__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.pokemon-chart__header h2 {
+  margin: 0;
+}
+
+.pokemon-chart__switcher {
+  display: flex;
+  gap: 8px;
+}
+
+.chart-type-btn {
+  padding: 6px 14px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: transparent;
+  color: var(--text);
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.chart-type-btn--active {
+  background: var(--accent-bg);
+  border-color: var(--accent-border);
+  color: var(--accent);
+  font-weight: 600;
+}
+
+/* Обране */
+.favorite-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+  line-height: 1;
+  color: var(--border);
+  padding: 2px 4px;
+  border-radius: 4px;
+  transition: color 0.15s;
+}
+
+.favorite-btn--active {
+  color: #f59e0b;
+}
+
+.favorite-btn--lg {
+  font-size: 28px;
+}
+
+.favorite-btn:hover {
+  color: #f59e0b;
+}
+
+/* Рядок заголовка деталей */
+.details__title-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  justify-content: center;
+  margin: 8px 0 16px;
+}
+
+.details__title-row .details__name {
+  margin: 0;
+}
+
+/* Темна тема для графіка */
+:root[data-theme="dark"] .pokemon-chart {
+  border-color: var(--border);
+}
